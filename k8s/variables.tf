@@ -10,3 +10,4 @@ variable "kubewpdb-host" {}
 variable "kubewpdb-name" {}
 variable "kubewpdb-creds" {}
 variable "efs-wp-content-id" {}
+variable "oidc-provider-arn" {}

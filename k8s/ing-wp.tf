@@ -1,8 +1,9 @@
 #
 ## WordPress Ingress
 #
-resource "kubernetes_ingress" "kube-wp" {
-
+resource "kubernetes_ingress_v1" "kube-wp" {
+depends_on = [
+kubernetes_service.kube-wp]
   metadata {
     name = "kube-wp"
     annotations = {
@@ -21,8 +22,12 @@ resource "kubernetes_ingress" "kube-wp" {
         path {
           path = "/"
           backend {
-            service_name = "kube-wp"
-            service_port = 8080
+            service {
+              name = "kube-wp"
+              port {
+                number = 8080
+              }
+            }
           }
         }
       }

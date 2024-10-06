@@ -17,7 +17,7 @@ module "kubewpdb" {
 
   engine         = "aurora-mysql"
   engine_mode    = "provisioned"
-  engine_version = "5.7.mysql_aurora.2.09.2"
+  engine_version = "5.7.mysql_aurora.2.12.2"
   cluster_family = "aurora-mysql5.7"
   cluster_size   = 1
   name           = local.kubewpdb-name

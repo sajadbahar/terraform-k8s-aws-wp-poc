@@ -15,8 +15,16 @@ resource "aws_security_group" "kube-wp-sg" {
   ingress {
     description = "Allow traffic from within the VPC"
     from_port   = 0
-    to_port     = 65535
+    to_port     = 0
     protocol    = "all"
+    cidr_blocks = [module.vpc.vpc_cidr_block]
+  }
+
+  ingress {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    description = "MySQL access from within VPC"
     cidr_blocks = [module.vpc.vpc_cidr_block]
   }
 

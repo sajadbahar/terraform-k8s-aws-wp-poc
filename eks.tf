@@ -4,53 +4,61 @@
 ##
 #
 data "aws_eks_cluster" "eks-cluster" {
-  name = module.eks.cluster_id
+  name = module.eks.cluster_name
+  depends_on = [
+  module.eks
+  ]
 }
 
 data "aws_eks_cluster_auth" "eks-cluster" {
-  name = module.eks.cluster_id
+  name = module.eks.cluster_name
+  depends_on = [
+  module.eks
+  ]
 }
 
 module "eks" {
-  source  = "terraform-aws-modules/eks/aws"
-  version = "14.0.0"
+  source = "terraform-aws-modules/eks/aws"
 
-  cluster_name    = var.eks-cluster-name
-  cluster_version = "1.18"
-  subnets         = module.vpc.private_subnets
+  cluster_name                             = var.eks-cluster-name
+  cluster_version                          = "1.30"
+  subnet_ids                               = module.vpc.private_subnets
+  cluster_endpoint_public_access           = true
+  enable_cluster_creator_admin_permissions = true
 
   vpc_id = module.vpc.vpc_id
 
-  node_groups = {
+  eks_managed_node_groups = {
     alpha = {
-      desired_capacity = 1
-      max_capacity     = 3
-      min_capacity     = 1
-      disk_size        = var.wn-disk-size
-      instance_types   = var.wn-instance-types[var.stage]
-      subnets          = [module.vpc.private_subnets[0]]
+      desired_size   = 1
+      max_size       = 3
+      min_size       = 1
+      disk_size      = var.wn-disk-size
+      instance_types = var.wn-instance-types[var.stage]
+      subnets        = [module.vpc.private_subnets[0]]
     }
 
     beta = {
-      desired_capacity = 1
-      max_capacity     = 3
-      min_capacity     = 1
-      disk_size        = var.wn-disk-size
-      instance_types   = var.wn-instance-types[var.stage]
-      subnets          = [module.vpc.private_subnets[1]]
+      desired_size   = 1
+      max_size       = 3
+      min_size       = 1
+      disk_size      = var.wn-disk-size
+      instance_types = var.wn-instance-types[var.stage]
+      subnets        = [module.vpc.private_subnets[1]]
     }
 
     gamma = {
-      desired_capacity = 1
-      max_capacity     = 3
-      min_capacity     = 1
-      disk_size        = var.wn-disk-size
-      instance_types   = var.wn-instance-types[var.stage]
-      subnets          = [module.vpc.private_subnets[2]]
+      desired_size   = 1
+      max_size       = 3
+      min_size       = 1
+      disk_size      = var.wn-disk-size
+      instance_types = var.wn-instance-types[var.stage]
+      subnets        = [module.vpc.private_subnets[2]]
     }
   }
-  workers_additional_policies = ["arn:aws:iam::aws:policy/AmazonElasticFileSystemFullAccess"]
 
-  write_kubeconfig   = true
-  config_output_path = "./"
+  iam_role_additional_policies = {
+    additional = "arn:aws:iam::aws:policy/AmazonElasticFileSystemFullAccess"
+  }
+
 }

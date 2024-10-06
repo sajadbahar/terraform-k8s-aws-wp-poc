@@ -6,6 +6,8 @@ resource "helm_release" "nginx_ingress" {
 
   repository = "https://kubernetes.github.io/ingress-nginx"
   chart      = "ingress-nginx"
+  wait = true
+  timeout = 300
 
   values = [file("k8s/ingress-controller-values.yaml")]
 

@@ -13,8 +13,9 @@ module "k8s" {
   stage-domain      = var.stage-domain[var.stage]
   aws-region        = var.aws-region
   security-group-id = aws_security_group.kube-wp-sg.id
-  kubewpdb-host     = module.kubewpdb.endpoint
+  kubewpdb-host     = module.kubewpdb.reader_endpoint
   kubewpdb-name     = local.kubewpdb-name
   kubewpdb-creds    = local.kubewpdb-creds
   efs-wp-content-id = module.efs-wp-content.id
+  oidc-provider-arn = module.eks.oidc_provider_arn
 }
